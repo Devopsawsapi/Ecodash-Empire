@@ -55,5 +55,9 @@ RUN mkdir -p storage/logs \
 
 EXPOSE 8000
 
+# ── Script de démarrage ───────────────────────────────────────────
+COPY start.sh ./
+RUN chmod +x start.sh
+
 # ── Démarrage : setup (migrations + seed) puis serve ─────────────
-CMD bash -c "php artisan serve --host=0.0.0.0 --port=${PORT:-8000} & php setup.php && wait"
+CMD ["bash", "start.sh"]
