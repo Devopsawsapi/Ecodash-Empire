@@ -6,7 +6,8 @@
   },
   "deploy": {
     "startCommand": "php setup.php && php artisan serve --host=0.0.0.0 --port=$PORT",
-    "healthcheckPath": "/api/health",
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
   }
 }
