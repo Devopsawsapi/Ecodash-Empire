@@ -5,7 +5,6 @@
     "dockerfilePath": "Dockerfile"
   },
   "deploy": {
-    "startCommand": "php setup.php && php artisan serve --host=0.0.0.0 --port=$PORT",
     "restartPolicyType": "ON_FAILURE"
   }
 }
