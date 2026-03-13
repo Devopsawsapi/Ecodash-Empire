@@ -2,20 +2,21 @@
 # EcoDash — Dockerfile Railway (PHP 8.2 / Laravel 12)
 # Optimisé : layer cache sur vendor/ pour éviter les timeouts EOF
 # ════════════════════════════════════════════════════════════════
-FROM dunglas/frankenphp:php8.2-bookworm
+FROM php:8.2-cli-bookworm
 
 LABEL maintainer="Empire TechNova" app="EcoDash"
 
 # ── Paquets système ──────────────────────────────────────────────
 RUN apt-get update && apt-get install -y \
     ca-certificates git unzip zip curl \
+    libzip-dev libicu-dev libonig-dev libxml2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Extensions PHP ───────────────────────────────────────────────
-RUN install-php-extensions \
-    ctype curl dom fileinfo filter hash \
-    mbstring openssl pcre pdo pdo_mysql \
-    session tokenizer xml opcache intl zip
+RUN docker-php-ext-install \
+    ctype dom fileinfo mbstring \
+    pdo pdo_mysql opcache intl zip \
+    xml bcmath pcntl
 
 # ── PHP production settings ──────────────────────────────────────
 RUN { \
@@ -31,8 +32,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 
 # ── Étape 1 : installer les dépendances (cache layer séparé) ─────
-# On copie UNIQUEMENT composer.json + composer.lock + artisan
-# → si ces fichiers ne changent pas, Docker réutilise le cache
 COPY composer.json composer.lock artisan ./
 
 RUN composer install \
