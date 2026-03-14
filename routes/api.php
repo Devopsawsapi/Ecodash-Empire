@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\BiodiversiteController;
 use App\Http\Controllers\Api\RapportController;
 use App\Http\Controllers\Api\IndicateursEmploiController;
 use App\Http\Controllers\Api\IndicateursSanteController;
+use App\Http\Controllers\Api\ComparaisonController;
+use App\Http\Controllers\Api\AIController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -140,6 +142,42 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('',       [RapportController::class, 'generer']);
         Route::get('{id}',    [RapportController::class, 'show']);
         Route::delete('{id}', [RapportController::class, 'destroy']);
+    });
+
+    // ── COMPARAISON MULTI-SOURCES ─────────────────────────────
+    Route::prefix('comparaison')->group(function () {
+        // Air
+        Route::get ('air/{id}',          [ComparaisonController::class, 'comparerAir']);
+        Route::post('air/analyse',        [ComparaisonController::class, 'analyserAir']);
+        // Eau
+        Route::get ('eau/{id}',          [ComparaisonController::class, 'comparerEau']);
+        Route::post('eau/analyse',        [ComparaisonController::class, 'analyserEau']);
+        // Sol
+        Route::get ('sol/{id}',          [ComparaisonController::class, 'comparerSol']);
+        Route::post('sol/analyse',        [ComparaisonController::class, 'analyserSol']);
+        // Biodiversité
+        Route::get ('biodiversite/{id}', [ComparaisonController::class, 'comparerBiodiversite']);
+        // Social
+        Route::get ('social',            [ComparaisonController::class, 'comparerSocial']);
+        // Rapport site complet
+        Route::get ('site/{id}',         [ComparaisonController::class, 'rapportSite']);
+    });
+
+    // ── INTELLIGENCE ARTIFICIELLE ─────────────────────────────
+    Route::prefix('ia')->group(function () {
+        // Analyse IA d'une mesure vs normes internationales
+        Route::post('analyser',   [AIController::class, 'analyser']);
+        // Prédiction tendances sur historique
+        Route::post('predire',    [AIController::class, 'predire']);
+        // Alertes intelligentes multi-modules
+        Route::get ('alertes',    [AIController::class, 'alertes']);
+        Route::post('alertes',    [AIController::class, 'alertes']);
+        // Rapport narratif PDF-ready
+        Route::post('rapport',    [AIController::class, 'rapport']);
+        // Chatbot IA environnemental
+        Route::post('chat',       [AIController::class, 'chat']);
+        // Analyse complète d'un site
+        Route::get ('site/{id}',  [AIController::class, 'analyseSite']);
     });
 
 });
